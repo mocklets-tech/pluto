@@ -17,7 +17,7 @@ class PlutoSharePreferencesPlugin() : Plugin(ID) {
         version = BuildConfig.VERSION_NAME
     )
 
-    override fun getView(): Fragment = SharedPrefFragment()
+    override fun getView(): Fragment = BaseFragment()
 
     override fun getDeveloperDetails(): DeveloperDetails {
         return DeveloperDetails(

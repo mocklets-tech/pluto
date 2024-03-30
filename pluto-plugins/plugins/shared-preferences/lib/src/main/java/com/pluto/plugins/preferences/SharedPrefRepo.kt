@@ -60,15 +60,24 @@ internal object SharedPrefRepo {
     }
 
     fun updateSelectedPreferenceFile(file: SharedPrefFile) {
-        val selectedFiles: HashSet<SharedPrefFile> = selectedPreferenceFiles ?: hashSetOf()
-        if (!selectedFiles.add(file)) {
-            selectedFiles.remove(file)
-        }
-        selectedPreferenceFiles = selectedFiles
+        selectedPreferenceFiles = hashSetOf(file)
+//        val selectedFiles: HashSet<SharedPrefFile> = selectedPreferenceFiles ?: hashSetOf()
+//        if (!selectedFiles.add(file)) {
+//            selectedFiles.remove(file)
+//        }
+//        selectedPreferenceFiles = selectedFiles
     }
 
     fun deSelectAll() {
         selectedPreferenceFiles = hashSetOf()
+    }
+
+    fun updateSelectedPreferenceFile(files: ArrayList<SharedPrefFile>) {
+        selectedPreferenceFiles = files.toHashSet()
+//        selectedPreferenceFiles?.let {
+//            it.clear()
+//            it.addAll(files)
+//        }
     }
 }
 

@@ -10,19 +10,5 @@
         android:name="com.pluto.plugins.preferences.ui.ListFragment"
         android:label="list"
         tools:layout="@layout/pluto_pref___fragment_list">
-        <action
-            android:id="@+id/openEditView"
-            app:destination="@id/editView" />
-        <action
-            android:id="@+id/openFilterSettings"
-            app:destination="@id/filterView" />
     </fragment>
-
-    <dialog
-        android:id="@+id/filterView"
-        android:name="com.pluto.plugins.preferences.ui.filter.FilterFragment" />
-
-    <dialog
-        android:id="@+id/editView"
-        android:name="com.pluto.plugins.preferences.ui.EditFragment"/>
 </navigation>

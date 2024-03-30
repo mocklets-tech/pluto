@@ -7,15 +7,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.pluto.plugin.share.Shareable
 import com.pluto.plugin.share.lazyContentSharer
 import com.pluto.plugins.preferences.R
 import com.pluto.plugins.preferences.Session
 import com.pluto.plugins.preferences.SharedPrefRepo
 import com.pluto.plugins.preferences.databinding.PlutoPrefFragmentListBinding
-import com.pluto.plugins.preferences.ui.EditProcessor.Companion.fromEditorData
-import com.pluto.plugins.preferences.ui.EditProcessor.Companion.toEditorData
+import com.pluto.plugins.preferences.getSharePreferencesFiles
 import com.pluto.utilities.autoClearInitializer
 import com.pluto.utilities.extensions.hideKeyboard
 import com.pluto.utilities.extensions.linearLayoutManager
@@ -25,6 +23,7 @@ import com.pluto.utilities.list.CustomItemDecorator
 import com.pluto.utilities.list.DiffAwareAdapter
 import com.pluto.utilities.list.DiffAwareHolder
 import com.pluto.utilities.list.ListItem
+import com.pluto.utilities.selector.lazyDataSelector
 import com.pluto.utilities.setOnDebounceClickListener
 import com.pluto.utilities.viewBinding
 import com.pluto.utilities.views.keyvalue.KeyValuePairEditResult
@@ -37,6 +36,7 @@ internal class ListFragment : Fragment(R.layout.pluto_pref___fragment_list) {
     private val keyValuePairEditor: KeyValuePairEditor by lazyKeyValuePairEditor()
     private val prefAdapter: BaseAdapter by autoClearInitializer { SharedPrefAdapter(onActionListener) }
     private val contentSharer by lazyContentSharer()
+    private val dataSelector by lazyDataSelector()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -60,11 +60,11 @@ internal class ListFragment : Fragment(R.layout.pluto_pref___fragment_list) {
         binding.options.setOnDebounceClickListener {
             context?.showMoreOptions(it, R.menu.pluto_pref___menu_more_options) { item ->
                 when (item.itemId) {
-                    R.id.filter -> findNavController().navigate(R.id.openFilterSettings)
+                    R.id.filter -> openFilterView()
                 }
             }
         }
-        binding.filter.setOnDebounceClickListener { findNavController().navigate(R.id.openFilterSettings) }
+        binding.filter.setOnDebounceClickListener { openFilterView() }
         binding.search.setText(Session.searchText)
         viewModel.preferences.removeObserver(sharedPrefObserver)
         viewModel.preferences.observe(viewLifecycleOwner, sharedPrefObserver)
@@ -73,6 +73,23 @@ internal class ListFragment : Fragment(R.layout.pluto_pref___fragment_list) {
 
         binding.close.setOnDebounceClickListener {
             activity?.finish()
+        }
+    }
+
+    private fun openFilterView() {
+        dataSelector.selectMultiple(
+            title = getString(R.string.pluto_pref___shared_pref_filter),
+            list = context?.getSharePreferencesFiles() ?: emptyList(),
+            preSelected = SharedPrefRepo.getSelectedPreferenceFiles(requireContext()).toList()
+        ).observe(viewLifecycleOwner) {
+            val listOfSharePrefFiles = arrayListOf<SharedPrefFile>()
+            it.forEach { option ->
+                if (option is SharedPrefFile) {
+                    listOfSharePrefFiles.add(option)
+                }
+            }
+            SharedPrefRepo.updateSelectedPreferenceFile(listOfSharePrefFiles)
+            viewModel.refresh()
         }
     }
 
