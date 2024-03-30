@@ -9,14 +9,10 @@ import com.squareup.moshi.JsonClass
 @Keep
 @JsonClass(generateAdapter = true)
 internal data class SharedPrefFile(
-    val label: String,
+    val label: CharSequence,
     val isDefault: Boolean
 ) : SelectorOption() {
-    override fun displayText(): String = label
-
-    override fun isSame(other: Any): Boolean {
-        return other is SharedPrefFile && other.label == this.label
-    }
+    override fun displayText(): CharSequence = label
 }
 
 internal data class SharedPrefKeyValuePair(

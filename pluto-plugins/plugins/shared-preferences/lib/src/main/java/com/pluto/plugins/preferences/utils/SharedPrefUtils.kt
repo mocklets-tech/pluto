@@ -3,11 +3,14 @@ package com.pluto.plugins.preferences.utils
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import com.pluto.plugins.preferences.R
 import com.pluto.plugins.preferences.ui.SharedPrefFile
 import com.pluto.plugins.preferences.ui.SharedPrefKeyValuePair
 import com.pluto.plugins.preferences.utils.SharedPrefUtils.Companion.DEFAULT
 import com.pluto.plugins.preferences.utils.SharedPrefUtils.Companion.isPlutoPref
 import com.pluto.utilities.DebugLog
+import com.pluto.utilities.extensions.color
+import com.pluto.utilities.spannable.createSpan
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -31,7 +34,7 @@ internal class SharedPrefUtils(private val context: Context) {
             }
         }
         set(value) {
-            preferences.selectedPreferenceFiles = moshiAdapter.toJson(value.map { it.label })
+            preferences.selectedPreferenceFiles = moshiAdapter.toJson(value.map { it.label.toString() })
             field = value
         }
 
@@ -76,8 +79,8 @@ private fun Context.getSharePreferencesFiles(): ArrayList<SharedPrefFile> {
             if (!isPlutoPref(it)) {
                 list.add(
                     if (it == "${packageName}_preferences.xml") {
-                        SharedPrefFile(DEFAULT, true)
-//                        SharedPrefFile(createSpan { append(italic(light(fontColor(DEFAULT, color(R.color.pluto___text_dark_60))))) }, true)
+//                        SharedPrefFile(DEFAULT, true)
+                        SharedPrefFile(createSpan { append(italic(light(fontColor(DEFAULT, color(R.color.pluto___text_dark_60))))) }, true)
                     } else {
                         val label = it.replace(".xml", "", true)
                         SharedPrefFile(label, false)
@@ -93,12 +96,12 @@ private fun Context.getPrefManager(file: SharedPrefFile): SharedPreferences =
     if (file.isDefault) {
         PreferenceManager.getDefaultSharedPreferences(this)
     } else {
-        getSharedPreferences(file.label, Context.MODE_PRIVATE)
+        getSharedPreferences(file.label.toString(), Context.MODE_PRIVATE)
     }
 
 private fun Context.getPrefKeyValueMap(file: SharedPrefFile): Pair<CharSequence, List<SharedPrefKeyValuePair>> {
     val prefManager = getPrefManager(file)
-    val list = prefManager.list(file.label, file.isDefault)
+    val list = prefManager.list(file.label.toString(), file.isDefault)
     return Pair(file.label, list)
 }
 
