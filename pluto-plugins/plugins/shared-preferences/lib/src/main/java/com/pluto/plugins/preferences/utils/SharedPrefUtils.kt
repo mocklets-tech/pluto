@@ -1,35 +1,40 @@
-package com.pluto.plugins.preferences
+package com.pluto.plugins.preferences.utils
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.pluto.plugins.preferences.ui.SharedPrefFile
 import com.pluto.plugins.preferences.ui.SharedPrefKeyValuePair
+import com.pluto.plugins.preferences.utils.SharedPrefUtils.Companion.DEFAULT
+import com.pluto.plugins.preferences.utils.SharedPrefUtils.Companion.isPlutoPref
 import com.pluto.utilities.DebugLog
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import java.io.File
 
-internal object SharedPrefRepo {
+internal class SharedPrefUtils(private val context: Context) {
 
-    private lateinit var preferences: Preferences
+    private val preferences: Preferences = Preferences(context)
     private val moshi: Moshi = Moshi.Builder().build()
-    private val moshiAdapter: JsonAdapter<HashSet<SharedPrefFile>?> = moshi.adapter(Types.newParameterizedType(Set::class.java, SharedPrefFile::class.java))
-    private var selectedPreferenceFiles: HashSet<SharedPrefFile>? = null
-        get() = preferences.selectedPreferenceFiles?.let { moshiAdapter.fromJson(it) }
+    private val moshiAdapter: JsonAdapter<List<SharedPrefFile>?> = moshi.adapter(Types.newParameterizedType(List::class.java, SharedPrefFile::class.java))
+    internal var selectedPreferenceFiles: List<SharedPrefFile> = arrayListOf()
+        get() {
+            return preferences.selectedPreferenceFiles?.let { moshiAdapter.fromJson(it) } ?: run {
+                arrayListOf<SharedPrefFile>().apply {
+                    addAll(context.getSharePreferencesFiles())
+                    selectedPreferenceFiles = this
+                }
+            }
+        }
         set(value) {
             preferences.selectedPreferenceFiles = moshiAdapter.toJson(value)
             field = value
         }
 
-    fun init(context: Context) {
-        preferences = Preferences(context)
-    }
-
-    fun get(context: Context): List<SharedPrefKeyValuePair> {
+    fun get(): List<SharedPrefKeyValuePair> {
         val list = arrayListOf<SharedPrefKeyValuePair>()
-        val prefFilesList = getSelectedPreferenceFiles(context)
+        val prefFilesList = selectedPreferenceFiles
         prefFilesList.forEach {
             val data = context.getPrefKeyValueMap(it)
             list.addAll(data.second)
@@ -38,8 +43,8 @@ internal object SharedPrefRepo {
         return list
     }
 
-    fun set(context: Context, pair: SharedPrefKeyValuePair, value: Any) {
-        val prefFile = context.getPrefFile(pair.prefLabel ?: Preferences.DEFAULT)
+    fun set(pair: SharedPrefKeyValuePair, value: Any) {
+        val prefFile = context.getPrefFile(pair.prefLabel ?: DEFAULT)
         val editor = context.getPrefManager(prefFile).edit()
         when (value) {
             is Int -> editor.putInt(pair.key, value).apply()
@@ -50,34 +55,11 @@ internal object SharedPrefRepo {
         }
     }
 
-    fun getSelectedPreferenceFiles(context: Context): HashSet<SharedPrefFile> {
-        if (selectedPreferenceFiles == null) {
-            selectedPreferenceFiles = hashSetOf<SharedPrefFile>().apply {
-                addAll(context.getSharePreferencesFiles())
-            }
+    companion object {
+        const val DEFAULT = "Default"
+        fun isPlutoPref(it: String): Boolean {
+            return it.startsWith("_pluto_pref", true)
         }
-        return selectedPreferenceFiles as HashSet<SharedPrefFile>
-    }
-
-    fun updateSelectedPreferenceFile(file: SharedPrefFile) {
-        selectedPreferenceFiles = hashSetOf(file)
-//        val selectedFiles: HashSet<SharedPrefFile> = selectedPreferenceFiles ?: hashSetOf()
-//        if (!selectedFiles.add(file)) {
-//            selectedFiles.remove(file)
-//        }
-//        selectedPreferenceFiles = selectedFiles
-    }
-
-    fun deSelectAll() {
-        selectedPreferenceFiles = hashSetOf()
-    }
-
-    fun updateSelectedPreferenceFile(files: ArrayList<SharedPrefFile>) {
-        selectedPreferenceFiles = files.toHashSet()
-//        selectedPreferenceFiles?.let {
-//            it.clear()
-//            it.addAll(files)
-//        }
     }
 }
 
@@ -86,10 +68,10 @@ internal fun Context.getSharePreferencesFiles(): ArrayList<SharedPrefFile> {
     val list = arrayListOf<SharedPrefFile>()
     if (prefsDir.exists() && prefsDir.isDirectory) {
         prefsDir.list()?.forEach {
-            if (!Preferences.isPlutoPref(it)) {
+            if (!isPlutoPref(it)) {
                 list.add(
                     if (it == "${packageName}_preferences.xml") {
-                        SharedPrefFile(Preferences.DEFAULT, true)
+                        SharedPrefFile(DEFAULT, true)
                     } else {
                         val label = it.replace(".xml", "", true)
                         SharedPrefFile(label, false)
@@ -134,5 +116,5 @@ private fun Context.getPrefFile(label: String): SharedPrefFile {
     } catch (e: Exception) {
         DebugLog.e("preferences", "error while fetching pref file", e)
     }
-    return SharedPrefFile(Preferences.DEFAULT, isDefault = true)
+    return SharedPrefFile(DEFAULT, isDefault = true)
 }

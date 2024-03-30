@@ -1,4 +1,4 @@
-package com.pluto.plugins.preferences
+package com.pluto.plugins.preferences.utils
 
 import android.content.Context
 
@@ -11,11 +11,6 @@ internal class Preferences(context: Context) {
         set(value) = settingsPrefs.edit().putString(SELECTED_PREF_FILE, value).apply()
 
     companion object {
-        fun isPlutoPref(it: String): Boolean {
-            return it.startsWith("_pluto_pref", true)
-        }
-
-        const val DEFAULT = "Default"
         private const val SELECTED_PREF_FILE = "selected_pref_file"
     }
 }

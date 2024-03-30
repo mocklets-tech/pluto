@@ -1,5 +1,6 @@
-package com.pluto.plugins.preferences.ui
+package com.pluto.plugins.preferences.utils
 
+import com.pluto.plugins.preferences.ui.SharedPrefKeyValuePair
 import com.pluto.utilities.views.keyvalue.KeyValuePairEditInputType
 import com.pluto.utilities.views.keyvalue.KeyValuePairEditRequest
 

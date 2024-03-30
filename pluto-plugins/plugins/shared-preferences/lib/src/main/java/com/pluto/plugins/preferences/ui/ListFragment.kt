@@ -11,9 +11,10 @@ import com.pluto.plugin.share.Shareable
 import com.pluto.plugin.share.lazyContentSharer
 import com.pluto.plugins.preferences.R
 import com.pluto.plugins.preferences.Session
-import com.pluto.plugins.preferences.SharedPrefRepo
 import com.pluto.plugins.preferences.databinding.PlutoPrefFragmentListBinding
-import com.pluto.plugins.preferences.getSharePreferencesFiles
+import com.pluto.plugins.preferences.utils.fromEditorData
+import com.pluto.plugins.preferences.utils.getSharePreferencesFiles
+import com.pluto.plugins.preferences.utils.toEditorData
 import com.pluto.utilities.autoClearInitializer
 import com.pluto.utilities.extensions.hideKeyboard
 import com.pluto.utilities.extensions.linearLayoutManager
@@ -66,8 +67,8 @@ internal class ListFragment : Fragment(R.layout.pluto_pref___fragment_list) {
         }
         binding.filter.setOnDebounceClickListener { openFilterView() }
         binding.search.setText(Session.searchText)
-        viewModel.preferences.removeObserver(sharedPrefObserver)
-        viewModel.preferences.observe(viewLifecycleOwner, sharedPrefObserver)
+        viewModel.preferenceList.removeObserver(sharedPrefObserver)
+        viewModel.preferenceList.observe(viewLifecycleOwner, sharedPrefObserver)
         keyValuePairEditor.result.removeObserver(keyValuePairEditObserver)
         keyValuePairEditor.result.observe(viewLifecycleOwner, keyValuePairEditObserver)
 
@@ -80,7 +81,7 @@ internal class ListFragment : Fragment(R.layout.pluto_pref___fragment_list) {
         dataSelector.selectMultiple(
             title = getString(R.string.pluto_pref___shared_pref_filter),
             list = context?.getSharePreferencesFiles() ?: emptyList(),
-            preSelected = SharedPrefRepo.getSelectedPreferenceFiles(requireContext()).toList()
+            preSelected = viewModel.getSelectedPrefFiles()
         ).observe(viewLifecycleOwner) {
             val listOfSharePrefFiles = arrayListOf<SharedPrefFile>()
             it.forEach { option ->
@@ -88,14 +89,13 @@ internal class ListFragment : Fragment(R.layout.pluto_pref___fragment_list) {
                     listOfSharePrefFiles.add(option)
                 }
             }
-            SharedPrefRepo.updateSelectedPreferenceFile(listOfSharePrefFiles)
-            viewModel.refresh()
+            viewModel.setSelectedPrefFiles(listOfSharePrefFiles)
         }
     }
 
     private fun filteredPrefs(search: String): List<SharedPrefKeyValuePair> {
         var list = emptyList<SharedPrefKeyValuePair>()
-        viewModel.preferences.value?.let {
+        viewModel.preferenceList.value?.let {
             list = it.filter { pref ->
                 pref.key.contains(search, true)
             }
@@ -108,8 +108,7 @@ internal class ListFragment : Fragment(R.layout.pluto_pref___fragment_list) {
         it.value?.let { value ->
             if (it.metaData is SharedPrefKeyValuePair) {
                 val pref: SharedPrefKeyValuePair = it.metaData as SharedPrefKeyValuePair
-                SharedPrefRepo.set(requireContext(), pref, pref.fromEditorData(value))
-                viewModel.refresh()
+                viewModel.setPrefData(pref, pref.fromEditorData(value))
             }
         }
     }

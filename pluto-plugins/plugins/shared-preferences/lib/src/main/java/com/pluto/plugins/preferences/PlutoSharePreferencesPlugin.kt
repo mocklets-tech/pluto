@@ -28,7 +28,6 @@ class PlutoSharePreferencesPlugin() : Plugin(ID) {
     }
 
     override fun onPluginInstalled() {
-        SharedPrefRepo.init(context)
     }
 
     override fun onPluginDataCleared() {
