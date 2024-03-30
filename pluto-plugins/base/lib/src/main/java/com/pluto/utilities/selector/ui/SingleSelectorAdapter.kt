@@ -32,7 +32,7 @@ internal class SingleSelectorItemHolder(
             binding.title.setSpan {
                 append(item.displayText())
             }
-            binding.checkbox.isSelected = selected?.let { it == item } ?: run { false }
+            binding.radio.isSelected = selected?.let { it == item } ?: run { false }
             binding.root.setOnDebounceClickListener {
                 onAction("click")
             }

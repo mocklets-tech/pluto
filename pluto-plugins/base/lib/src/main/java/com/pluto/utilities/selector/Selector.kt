@@ -42,7 +42,7 @@ class Selector : ViewModel() {
 }
 
 abstract class SelectorOption : ListItem() {
-    abstract fun displayText(): CharSequence
+    abstract fun displayText(): String
     open fun icon(): Drawable? = null
 }
 
