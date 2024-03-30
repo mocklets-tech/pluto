@@ -54,7 +54,8 @@ internal class MultiSelectorItemHolder(
         selectedLiveData.removeObserver(selectedChoicesObserver)
     }
 
-    private val selectedChoicesObserver = Observer<List<SelectorOption>> {
-        binding.checkbox.isSelected = it?.contains(item) ?: run { false }
+    private val selectedChoicesObserver = Observer<List<SelectorOption>> { list ->
+        binding.checkbox.isSelected =
+            item is SelectorOption && list?.any { it.displayTextString() == (item as SelectorOption).displayTextString() } ?: run { false }
     }
 }

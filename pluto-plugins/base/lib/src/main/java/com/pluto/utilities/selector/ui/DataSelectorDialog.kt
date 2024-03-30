@@ -80,9 +80,12 @@ class DataSelectorDialog : BottomSheetDialogFragment() {
                 object : DiffAwareAdapter.OnActionListener {
                     override fun onAction(action: String, data: ListItem, holder: DiffAwareHolder) {
                         if (data is SelectorOption) {
-                            val tempSet = tempSelectedOptionLiveData.value?.toHashSet() ?: hashSetOf()
-                            if (!tempSet.add(data)) {
-                                tempSet.remove(data)
+                            var tempSet = tempSelectedOptionLiveData.value?.toHashSet() ?: hashSetOf()
+                            val isOptionAlreadyPresent = tempSet.any { it.displayTextString() == data.displayTextString() }
+                            if (isOptionAlreadyPresent) {
+                                tempSet = tempSet.filter { it.displayTextString() != data.displayTextString() }.toHashSet()
+                            } else {
+                                tempSet.add(data)
                             }
                             tempSelectedOptionLiveData.postValue(tempSet.toList())
                         }

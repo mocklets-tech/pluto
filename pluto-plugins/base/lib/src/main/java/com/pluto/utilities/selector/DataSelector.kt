@@ -41,7 +41,9 @@ class Selector : ViewModel() {
 }
 
 abstract class SelectorOption : ListItem() {
-    abstract fun displayText(): String
+    abstract fun displayText(): CharSequence
+
+    fun displayTextString(): String = displayText().toString()
 }
 
 internal data class SelectorData<T>(val title: String, val list: List<SelectorOption>, val preSelected: T?)
