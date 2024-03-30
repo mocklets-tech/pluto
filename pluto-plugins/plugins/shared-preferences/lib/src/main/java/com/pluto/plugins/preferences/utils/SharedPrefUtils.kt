@@ -114,11 +114,7 @@ private fun SharedPreferences.list(label: String, default: Boolean): List<Shared
 private fun Context.getPrefFile(label: String): SharedPrefFile {
     try {
         val prefFilesList = getSharePreferencesFiles()
-        prefFilesList.forEach {
-            if (it.label == label) {
-                return it
-            }
-        }
+        return prefFilesList.first { it.label == label }
     } catch (e: Exception) {
         DebugLog.e("preferences", "error while fetching pref file", e)
     }
