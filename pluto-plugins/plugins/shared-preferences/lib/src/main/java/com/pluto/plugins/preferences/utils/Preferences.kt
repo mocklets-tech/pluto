@@ -11,7 +11,7 @@ internal class Preferences(context: Context) {
         set(value) = settingsPrefs.edit().putString(SELECTED_PREF_FILE, value).apply()
 
     companion object {
-        private const val SELECTED_PREF_FILE = "selected_pref_file"
+        private const val SELECTED_PREF_FILE = "selected_pref_file_v2"
     }
 }
 

@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.pluto.plugins.preferences.utils.SharedPrefUtils
-import com.pluto.utilities.selector.SelectorOption
 
 internal class SharedPrefViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -19,7 +18,9 @@ internal class SharedPrefViewModel(application: Application) : AndroidViewModel(
         _preferences.postValue(sharePrefUtils.get())
     }
 
-    fun getSelectedPrefFiles(): List<SelectorOption> = sharePrefUtils.selectedPreferenceFiles
+    fun getPrefFiles(): List<SharedPrefFile> = sharePrefUtils.allPreferenceFiles
+
+    fun getSelectedPrefFiles(): List<SharedPrefFile> = sharePrefUtils.selectedPreferenceFiles
 
     fun setSelectedPrefFiles(files: List<SharedPrefFile>) {
         sharePrefUtils.selectedPreferenceFiles = files

@@ -13,7 +13,6 @@ import com.pluto.plugins.preferences.R
 import com.pluto.plugins.preferences.Session
 import com.pluto.plugins.preferences.databinding.PlutoPrefFragmentListBinding
 import com.pluto.plugins.preferences.utils.fromEditorData
-import com.pluto.plugins.preferences.utils.getSharePreferencesFiles
 import com.pluto.plugins.preferences.utils.toEditorData
 import com.pluto.utilities.autoClearInitializer
 import com.pluto.utilities.extensions.hideKeyboard
@@ -80,7 +79,7 @@ internal class ListFragment : Fragment(R.layout.pluto_pref___fragment_list) {
     private fun openFilterView() {
         dataSelector.selectMultiple(
             title = getString(R.string.pluto_pref___shared_pref_filter),
-            list = context?.getSharePreferencesFiles() ?: emptyList(),
+            list = viewModel.getPrefFiles(),
             preSelected = viewModel.getSelectedPrefFiles()
         ).observe(viewLifecycleOwner) {
             val listOfSharePrefFiles = arrayListOf<SharedPrefFile>()

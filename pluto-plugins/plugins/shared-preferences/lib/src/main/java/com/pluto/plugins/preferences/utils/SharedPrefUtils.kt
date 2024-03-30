@@ -17,10 +17,13 @@ internal class SharedPrefUtils(private val context: Context) {
 
     private val preferences: Preferences = Preferences(context)
     private val moshi: Moshi = Moshi.Builder().build()
-    private val moshiAdapter: JsonAdapter<List<SharedPrefFile>?> = moshi.adapter(Types.newParameterizedType(List::class.java, SharedPrefFile::class.java))
+    private val moshiAdapter: JsonAdapter<List<String>?> = moshi.adapter(Types.newParameterizedType(List::class.java, String::class.java))
     internal var selectedPreferenceFiles: List<SharedPrefFile> = arrayListOf()
         get() {
-            return preferences.selectedPreferenceFiles?.let { moshiAdapter.fromJson(it) } ?: run {
+            return preferences.selectedPreferenceFiles?.let {
+                moshiAdapter.fromJson(it)?.map { label -> context.getPrefFile(label) }
+            } ?: run {
+                selectedPreferenceFiles = context.getSharePreferencesFiles()
                 arrayListOf<SharedPrefFile>().apply {
                     addAll(context.getSharePreferencesFiles())
                     selectedPreferenceFiles = this
@@ -28,9 +31,11 @@ internal class SharedPrefUtils(private val context: Context) {
             }
         }
         set(value) {
-            preferences.selectedPreferenceFiles = moshiAdapter.toJson(value)
+            preferences.selectedPreferenceFiles = moshiAdapter.toJson(value.map { it.label })
             field = value
         }
+
+    internal val allPreferenceFiles = context.getSharePreferencesFiles()
 
     fun get(): List<SharedPrefKeyValuePair> {
         val list = arrayListOf<SharedPrefKeyValuePair>()
@@ -63,7 +68,7 @@ internal class SharedPrefUtils(private val context: Context) {
     }
 }
 
-internal fun Context.getSharePreferencesFiles(): ArrayList<SharedPrefFile> {
+private fun Context.getSharePreferencesFiles(): ArrayList<SharedPrefFile> {
     val prefsDir = File(applicationInfo?.dataDir, "shared_prefs")
     val list = arrayListOf<SharedPrefFile>()
     if (prefsDir.exists() && prefsDir.isDirectory) {
@@ -72,6 +77,7 @@ internal fun Context.getSharePreferencesFiles(): ArrayList<SharedPrefFile> {
                 list.add(
                     if (it == "${packageName}_preferences.xml") {
                         SharedPrefFile(DEFAULT, true)
+//                        SharedPrefFile(createSpan { append(italic(light(fontColor(DEFAULT, color(R.color.pluto___text_dark_60))))) }, true)
                     } else {
                         val label = it.replace(".xml", "", true)
                         SharedPrefFile(label, false)
@@ -90,7 +96,7 @@ private fun Context.getPrefManager(file: SharedPrefFile): SharedPreferences =
         getSharedPreferences(file.label, Context.MODE_PRIVATE)
     }
 
-private fun Context.getPrefKeyValueMap(file: SharedPrefFile): Pair<String, List<SharedPrefKeyValuePair>> {
+private fun Context.getPrefKeyValueMap(file: SharedPrefFile): Pair<CharSequence, List<SharedPrefKeyValuePair>> {
     val prefManager = getPrefManager(file)
     val list = prefManager.list(file.label, file.isDefault)
     return Pair(file.label, list)
