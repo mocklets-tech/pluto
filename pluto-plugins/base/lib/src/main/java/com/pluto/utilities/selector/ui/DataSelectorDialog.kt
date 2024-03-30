@@ -19,14 +19,14 @@ import com.pluto.utilities.list.DiffAwareHolder
 import com.pluto.utilities.list.ListItem
 import com.pluto.utilities.selector.SelectorData
 import com.pluto.utilities.selector.SelectorOption
-import com.pluto.utilities.selector.lazySelector
+import com.pluto.utilities.selector.lazyDataSelector
 import com.pluto.utilities.setOnDebounceClickListener
 import com.pluto.utilities.viewBinding
 
-class SelectorDialog : BottomSheetDialogFragment() {
+class DataSelectorDialog : BottomSheetDialogFragment() {
 
     private val binding by viewBinding(PlutoSelectorDialogBinding::bind)
-    private val selector by lazySelector()
+    private val selector by lazyDataSelector()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         inflater.inflate(R.layout.pluto___selector_dialog, container, false)
 

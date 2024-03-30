@@ -19,8 +19,8 @@ import com.pluto.plugin.share.lazyContentSharer
 import com.pluto.plugin.share.share
 import com.pluto.plugin.share.shareFile
 import com.pluto.utilities.extensions.toast
-import com.pluto.utilities.selector.lazySelector
-import com.pluto.utilities.selector.ui.SelectorDialog
+import com.pluto.utilities.selector.lazyDataSelector
+import com.pluto.utilities.selector.ui.DataSelectorDialog
 import com.pluto.utilities.views.keyvalue.edit.KeyValuePairEditDialog
 import com.pluto.utilities.views.keyvalue.edit.KeyValuePairEditor
 import com.pluto.utilities.views.keyvalue.edit.lazyKeyValuePairEditor
@@ -29,7 +29,7 @@ class PlutoActivity : AppCompatActivity() {
 
     private val sharer: ContentShareViewModel by lazyContentSharer()
     private val keyValuePairEditor: KeyValuePairEditor by lazyKeyValuePairEditor()
-    private val selector by lazySelector()
+    private val selector by lazyDataSelector()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +58,7 @@ class PlutoActivity : AppCompatActivity() {
         }
 
         selector.data.observe(this) {
-            SelectorDialog().apply { show(supportFragmentManager, "selector") }
+            DataSelectorDialog().apply { show(supportFragmentManager, "selector") }
         }
 
         sharer.action.observe(this) {

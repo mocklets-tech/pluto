@@ -1,6 +1,5 @@
 package com.pluto.utilities.selector
 
-import android.graphics.drawable.Drawable
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
@@ -43,11 +42,10 @@ class Selector : ViewModel() {
 
 abstract class SelectorOption : ListItem() {
     abstract fun displayText(): String
-    open fun icon(): Drawable? = null
 }
 
-data class SelectorData<T>(val title: String, val list: List<SelectorOption>, val preSelected: T?)
+internal data class SelectorData<T>(val title: String, val list: List<SelectorOption>, val preSelected: T?)
 
-fun Fragment.lazySelector(): Lazy<Selector> = activityViewModels()
+fun Fragment.lazyDataSelector(): Lazy<Selector> = activityViewModels()
 
-fun ComponentActivity.lazySelector(): Lazy<Selector> = viewModels()
+fun ComponentActivity.lazyDataSelector(): Lazy<Selector> = viewModels()
