@@ -1,4 +1,4 @@
-package com.pluto.plugins.datastore.pref.internal
+package com.pluto.plugins.datastore.pref.compose.internal
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

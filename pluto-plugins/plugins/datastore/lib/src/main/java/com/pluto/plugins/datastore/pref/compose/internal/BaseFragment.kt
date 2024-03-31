@@ -1,4 +1,4 @@
-package com.pluto.plugins.datastore.pref.internal
+package com.pluto.plugins.datastore.pref.compose.internal
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,8 +18,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.pluto.plugins.datastore.pref.internal.compose.FilterView
-import com.pluto.plugins.datastore.pref.internal.compose.MainComposable
+import com.pluto.plugins.datastore.pref.compose.internal.compose.FilterView
+import com.pluto.plugins.datastore.pref.compose.internal.compose.MainComposable
 import kotlin.math.max
 import kotlinx.coroutines.flow.update
 

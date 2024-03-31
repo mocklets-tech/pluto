@@ -1,4 +1,4 @@
-package com.pluto.plugins.datastore.pref.internal.compose
+package com.pluto.plugins.datastore.pref.compose.internal.compose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.Insets
 import com.pluto.plugins.datastore.pref.R
-import com.pluto.plugins.datastore.pref.internal.PrefElement
-import com.pluto.plugins.datastore.pref.internal.PrefUiModel
+import com.pluto.plugins.datastore.pref.compose.internal.PrefElement
+import com.pluto.plugins.datastore.pref.compose.internal.PrefUiModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

@@ -1,4 +1,4 @@
-package com.pluto.plugins.datastore.pref.internal.compose
+package com.pluto.plugins.datastore.pref.compose.internal.compose
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState

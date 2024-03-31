@@ -1,4 +1,4 @@
-package com.pluto.plugins.datastore.pref.internal.compose
+package com.pluto.plugins.datastore.pref.compose.internal.compose
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -32,9 +32,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pluto.plugins.datastore.pref.R
-import com.pluto.plugins.datastore.pref.internal.PrefElement
-import com.pluto.plugins.datastore.pref.internal.PrefUiModel
-import com.pluto.plugins.datastore.pref.internal.Type
+import com.pluto.plugins.datastore.pref.compose.internal.PrefElement
+import com.pluto.plugins.datastore.pref.compose.internal.PrefUiModel
+import com.pluto.plugins.datastore.pref.compose.internal.Type
 
 @OptIn(ExperimentalFoundationApi::class) // for stickyHeader
 @SuppressWarnings("LongMethod")
