@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.pluto.plugins.datastore.pref.PreferenceHolder
 import com.pluto.plugins.datastore.pref.utils.DatastorePrefUtils
 
 internal class DatastorePrefViewModel(application: Application) : AndroidViewModel(application) {
@@ -18,17 +19,11 @@ internal class DatastorePrefViewModel(application: Application) : AndroidViewMod
         _preferences.postValue(sharePrefUtils.get())
     }
 
-    fun getPrefFiles(): List<DatastorePrefFile> {
-        sharePrefUtils.allPreferenceFiles
-        return emptyList()
-    }
+    fun getPrefFiles(): List<PreferenceHolder> = sharePrefUtils.allPreferenceFiles
 
-    fun getSelectedPrefFiles(): List<DatastorePrefFile> {
-        sharePrefUtils.selectedPreferenceFiles
-        return emptyList()
-    }
+    fun getSelectedPrefFiles(): List<PreferenceHolder> = sharePrefUtils.selectedPreferenceFiles
 
-    fun setSelectedPrefFiles(files: List<DatastorePrefFile>) {
+    fun setSelectedPrefFiles(files: List<PreferenceHolder>) {
         sharePrefUtils.selectedPreferenceFiles = files
         refresh()
     }

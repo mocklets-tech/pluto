@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
 }
 
 apply from: "$rootDir/scripts/build/utils.gradle"
@@ -74,4 +75,6 @@ dependencies {
 
     implementation(libs.datastore.preferences)
 
+    implementation(libs.moshi)
+    ksp(libs.moshi.codegen)
 }
