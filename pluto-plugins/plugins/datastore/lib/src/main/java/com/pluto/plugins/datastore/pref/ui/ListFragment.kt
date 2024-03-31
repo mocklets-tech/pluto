@@ -60,8 +60,8 @@ internal class ListFragment : Fragment(R.layout.pluto_dts___fragment_list) {
         }
         binding.filter.setOnDebounceClickListener { openFilterView() }
         binding.search.setText(Session.searchText)
-        viewModel.preferenceList.removeObserver(sharedPrefObserver)
-        viewModel.preferenceList.observe(viewLifecycleOwner, sharedPrefObserver)
+        viewModel.preferenceList.removeObserver(datastorePrefObserver)
+        viewModel.preferenceList.observe(viewLifecycleOwner, datastorePrefObserver)
         keyValuePairEditor.result.removeObserver(keyValuePairEditObserver)
         keyValuePairEditor.result.observe(viewLifecycleOwner, keyValuePairEditObserver)
 
@@ -106,7 +106,7 @@ internal class ListFragment : Fragment(R.layout.pluto_dts___fragment_list) {
         }
     }
 
-    private val sharedPrefObserver = Observer<List<DatastorePrefKeyValuePair>> {
+    private val datastorePrefObserver = Observer<List<DatastorePrefKeyValuePair>> {
         prefAdapter.list = filteredPrefs(binding.search.text.toString())
     }
 
