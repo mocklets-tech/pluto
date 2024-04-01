@@ -9,7 +9,7 @@ import com.squareup.moshi.Types
 
 internal class Preferences(context: Context) {
 
-    private val settingsPrefs by lazy { context.preferences("_pluto_datastore_pref_settings") }
+    private val settingsPrefs by lazy { context.preferences("_pluto_pref_datastore_settings") }
     private val moshi: Moshi = Moshi.Builder().build()
     private val moshiAdapter: JsonAdapter<List<String>?> = moshi.adapter(Types.newParameterizedType(List::class.java, String::class.java))
 
