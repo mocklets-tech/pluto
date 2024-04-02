@@ -12,9 +12,10 @@ data class PrefUiModel(
 data class PrefElement(
     val prefName: String,
     val key: String,
-    val value: String,
-    val type: Type
-)
+    val value: Any
+) {
+    val type: Type = Type.type(value)
+}
 
 sealed class Type(val displayText: String) {
 

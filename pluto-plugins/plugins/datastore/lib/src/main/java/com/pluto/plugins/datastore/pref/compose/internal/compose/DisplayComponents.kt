@@ -61,7 +61,7 @@ internal fun PrefListItem(
     val isEditing =
         editableItem.value?.name == element.prefName && editableItem.value?.key == element.key
     val newValue = remember {
-        mutableStateOf(TextFieldValue(element.value, TextRange(element.value.length)))
+        mutableStateOf(TextFieldValue(element.value.toString(), TextRange(element.value.toString().length)))
     }
     Column(
         modifier = modifier
@@ -69,8 +69,8 @@ internal fun PrefListItem(
             .clickable(enabled = !isEditing) {
                 editableItem.value = PreferenceKey(element.prefName, element.key)
                 newValue.value = TextFieldValue(
-                    element.value,
-                    TextRange(element.value.length)
+                    element.value.toString(),
+                    TextRange(element.value.toString().length)
                 )
             }
             .padding(top = 8.dp)
@@ -140,7 +140,7 @@ private fun Element(
         )
     } else {
         Text(
-            text = element.value,
+            text = element.value.toString(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 24.dp),
@@ -218,8 +218,8 @@ private fun EditableField(
             onCancel = {
                 editableItem.value = null
                 newValue.value = TextFieldValue(
-                    element.value,
-                    TextRange(element.value.length)
+                    element.value.toString(),
+                    TextRange(element.value.toString().length)
                 )
             }
         )
@@ -266,8 +266,7 @@ private fun PreviewListItem() {
                 element = PrefElement(
                     "Preferences",
                     "key param",
-                    "value of the key",
-                    Type.TypeString
+                    "value of the key"
                 ),
                 modifier = Modifier.background(colorResource(id = R.color.pluto___white))
             )
@@ -284,8 +283,7 @@ private fun PreviewLongContentListItem() {
                 element = PrefElement(
                     "Preferences",
                     "VERY VERY VERY VERY VERY very very very very very very Loooong Key",
-                    "VERY VERY VERY VERY VERY very very very very Loooong value",
-                    Type.TypeBoolean
+                    "VERY VERY VERY VERY VERY very very very very Loooong value"
                 ),
                 modifier = Modifier.background(colorResource(id = R.color.pluto___white))
             )

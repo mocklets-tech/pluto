@@ -38,27 +38,23 @@ internal class BaseViewModel : ViewModel() {
                     }
                 }
             }.map { listFlows ->
-                combine(
-                    flows = listFlows,
-                    transform = { listPreferences ->
-                        listPreferences.map { namePrefPair ->
-                            PrefUiModel(
-                                name = namePrefPair.second,
-                                data = namePrefPair.first.asMap().map { entry ->
-                                    PrefElement(
-                                        key = entry.key.toString(),
-                                        value = entry.value.toString(),
-                                        type = Type.type(entry.value),
-                                        prefName = namePrefPair.second
-                                    )
-                                },
-                                isExpanded = expandedMap.getOrPut(namePrefPair.second) {
-                                    mutableStateOf(false)
-                                }
-                            )
-                        }
+                combine(listFlows) { listPreferences ->
+                    listPreferences.map { namePrefPair ->
+                        PrefUiModel(
+                            name = namePrefPair.second,
+                            data = namePrefPair.first.asMap().map { entry ->
+                                PrefElement(
+                                    key = entry.key.toString(),
+                                    value = entry.value,
+                                    prefName = namePrefPair.second
+                                )
+                            },
+                            isExpanded = expandedMap.getOrPut(namePrefPair.second) {
+                                mutableStateOf(true)
+                            }
+                        )
                     }
-                )
+                }
             }.flattenMerge()
                 .combine(filteredPref) { prefList, filterMap ->
                     prefList.filter {
@@ -79,14 +75,19 @@ internal class BaseViewModel : ViewModel() {
                 when {
                     preferenceElement.type == Type.TypeBoolean && value.toBooleanStrictOrNull() != null ->
                         preference[booleanPreferencesKey(preferenceElement.key)] = value.toBoolean()
+
                     preferenceElement.type == Type.TypeDouble && value.toDoubleOrNull() != null ->
                         preference[doublePreferencesKey(preferenceElement.key)] = value.toDouble()
+
                     preferenceElement.type == Type.TypeFloat && value.toFloatOrNull() != null ->
                         preference[floatPreferencesKey(preferenceElement.key)] = value.toFloat()
+
                     preferenceElement.type == Type.TypeLong && value.toLongOrNull() != null ->
                         preference[longPreferencesKey(preferenceElement.key)] = value.toLong()
+
                     preferenceElement.type == Type.TypeString ->
                         preference[stringPreferencesKey(preferenceElement.key)] = value
+
                     else -> {
                         // show some error
                         // add validation before sending data here
