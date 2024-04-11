@@ -11,6 +11,7 @@ import com.pluto.utilities.extensions.asFormattedDate
 import com.pluto.utilities.list.ListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 internal class LogsViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -27,22 +28,64 @@ internal class LogsViewModel(application: Application) : AndroidViewModel(applic
         get() = _serializedLogs
     private val _serializedLogs = MutableLiveData<String>()
 
-    fun fetch(search: String = "") {
+    /* fun fetch(search: String = "") {
+         viewModelScope.launch(Dispatchers.IO) {
+             if (rawLogs == null) {
+                 rawLogs = LogDBHandler.fetchAll()
+             }
+             val currentSessionLogs = (rawLogs ?: arrayListOf()).filter { it.sessionId == Session.id && it.data.isValidSearch(search) }.map { it.data }
+             val previousSessionLogs = (rawLogs ?: arrayListOf()).filter { it.sessionId != Session.id && it.data.isValidSearch(search) }.map { it.data }
+
+             val list = arrayListOf<ListItem>()
+             list.addAll(currentSessionLogs)
+             if (previousSessionLogs.isNotEmpty()) {
+                 list.add(LogPreviousSessionHeader())
+                 list.addAll(previousSessionLogs)
+             }
+             _logs.postValue(list)
+         }
+     }*/
+
+    fun searchAndFilter(
+        search: String = "",
+        logType: List<LogType> = emptyList(),
+        logTimeStamp: LogTimeStamp = LogTimeStamp(0,false)
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             if (rawLogs == null) {
                 rawLogs = LogDBHandler.fetchAll()
             }
-            val currentSessionLogs = (rawLogs ?: arrayListOf()).filter { it.sessionId == Session.id && it.data.isValidSearch(search) }.map { it.data }
-            val previousSessionLogs = (rawLogs ?: arrayListOf()).filter { it.sessionId != Session.id && it.data.isValidSearch(search) }.map { it.data }
+            val currentSessionLogs =
+                (rawLogs ?: arrayListOf()).filter { it.sessionId == Session.id }.
+                filter {
+                    it.data.isValidSearch(
+                        search,
+                        logType.map { logType -> logType.type })
+                }.
+                filter { pastTimeFilter(it.timestamp,logTimeStamp) }.map { it.data }
+
+            val previousSessionLogs = (rawLogs ?: arrayListOf()).filter {
+                it.sessionId != Session.id && it.data.isValidSearch(
+                    search,
+                    logType.map { logType -> logType.type })
+            }.
+            filter { pastTimeFilter(it.timestamp,logTimeStamp) }.map { it.data }
 
             val list = arrayListOf<ListItem>()
             list.addAll(currentSessionLogs)
-            if (previousSessionLogs.isNotEmpty()) {
+            if (!logTimeStamp.isSessionFilter && previousSessionLogs.isNotEmpty()) {
                 list.add(LogPreviousSessionHeader())
                 list.addAll(previousSessionLogs)
             }
             _logs.postValue(list)
         }
+    }
+
+    private fun pastTimeFilter(logTime: Long,log: LogTimeStamp): Boolean {
+        if (log.timeStamp==0 || log.isSessionFilter)
+            return true
+        return (logTime >= (System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(
+            log.timeStamp.toLong())))
     }
 
     fun deleteAll() {
@@ -93,5 +136,22 @@ internal class LogsViewModel(application: Application) : AndroidViewModel(applic
     }
 }
 
+/*
 private fun LogData.isValidSearch(search: String): Boolean =
     search.isEmpty() || tag.contains(search, true) || message.contains(search, true) || stackTrace.fileName.contains(search, true)
+*/
+
+private fun LogData.isValidSearch(search: String, logType: List<String>): Boolean {
+    return if (logType.isNotEmpty()) {
+        logType.contains(tag) && (search.isEmpty() || message.contains(
+            search,
+            true
+        ) || stackTrace.fileName.contains(search, true))
+    } else {
+        search.isEmpty() || message.contains(search, true) || stackTrace.fileName.contains(
+            search,
+            true
+        )
+    }
+}
+
