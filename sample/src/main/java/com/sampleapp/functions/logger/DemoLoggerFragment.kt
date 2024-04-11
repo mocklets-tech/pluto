@@ -27,6 +27,7 @@ class DemoLoggerFragment : Fragment(R.layout.fragment_demo_logger) {
         _binding = null
     }
 
+    @SuppressWarnings("StringLiteralDuplication")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

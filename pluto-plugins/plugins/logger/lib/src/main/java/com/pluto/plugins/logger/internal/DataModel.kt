@@ -67,12 +67,15 @@ internal data class LogType(
 @JsonClass(generateAdapter = true)
 internal data class LogTimeStamp(
     val timeStamp: Int = 0,
-    val isSessionFilter :Boolean = false
+    val isSessionFilter: Boolean = false
 ) : SelectorOption() {
     override fun displayText(): CharSequence {
-        if (isSessionFilter)
-            return  "Current session"
-        return "<$timeStamp mins"
+        if (isSessionFilter) {
+            return "Current session only"
+        }
+        if (timeStamp == 1) {
+            return "< $timeStamp minute"
+        }
+        return "< $timeStamp minutes"
     }
 }
-

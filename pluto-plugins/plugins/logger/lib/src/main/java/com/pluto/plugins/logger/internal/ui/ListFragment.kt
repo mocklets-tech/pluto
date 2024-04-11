@@ -17,7 +17,6 @@ import com.pluto.plugins.logger.internal.LogData
 import com.pluto.plugins.logger.internal.LogTimeStamp
 import com.pluto.plugins.logger.internal.LogType
 import com.pluto.plugins.logger.internal.LogsViewModel
-import com.pluto.plugins.logger.internal.Session
 import com.pluto.plugins.logger.internal.ui.list.LogsAdapter
 import com.pluto.utilities.autoClearInitializer
 import com.pluto.utilities.extensions.hideKeyboard
@@ -52,7 +51,7 @@ internal class ListFragment : Fragment(R.layout.pluto_logger___fragment_list) {
             viewLifecycleOwner.lifecycleScope.launchWhenResumed {
                 text?.toString()?.let {
                     filterViewModel.updateSearchText(it)
-                    //viewModel.searchAndFilter(it, filterViewModel.getSelectedFilters())
+                    // viewModel.searchAndFilter(it, filterViewModel.getSelectedFilters())
                     if (it.isEmpty()) {
                         binding.logList.linearLayoutManager()?.scrollToPositionWithOffset(0, 0)
                     }
@@ -105,38 +104,24 @@ internal class ListFragment : Fragment(R.layout.pluto_logger___fragment_list) {
                 }
             }
         }
+        handleFilterStates()
+    }
 
+    private fun handleFilterStates() {
         filterViewModel.selectedFiltersList.observe(this) {
-            if (it.isNotEmpty()) {
-                binding.ivLogTypeSelected.visibility = View.VISIBLE
-            } else {
-                binding.ivLogTypeSelected.visibility = View.GONE
-            }
-
+            binding.ivLogTypeSelected.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
         }
 
         filterViewModel.isFilterApplied.observe(this) {
-            if (it) {
-                binding.ivFilterApplied.visibility = View.VISIBLE
-            } else {
-                binding.ivFilterApplied.visibility = View.GONE
-            }
-
+            binding.ivFilterApplied.visibility = if (it) View.VISIBLE else View.GONE
         }
 
         filterViewModel.selectedTimeStamp.observe(this) {
-            if (it.timeStamp != 0) {
-                binding.ivLogTimeStamp.visibility = View.VISIBLE
-            } else {
-                binding.ivLogTimeStamp.visibility = View.GONE
-            }
+            binding.ivLogTimeStamp.visibility = if (it.timeStamp != 0) View.VISIBLE else View.GONE
         }
 
-        filterViewModel.isFilterVisible.observe(this){
-            if(it)
-                binding.filterView.visibility = View.VISIBLE
-            else
-                binding.filterView.visibility = View.GONE
+        filterViewModel.isFilterVisible.observe(this) {
+            binding.filterView.visibility = if (it) View.VISIBLE else View.GONE
         }
     }
 
@@ -190,7 +175,6 @@ internal class ListFragment : Fragment(R.layout.pluto_logger___fragment_list) {
             filterViewModel.setSelectedFiltersLogType(logTypeList)
         }
     }
-
 
     private fun openTimeStampFilterView() {
         dataSelector.selectSingle(

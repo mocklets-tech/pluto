@@ -34,9 +34,9 @@ internal class FilterViewModel(application: Application) : AndroidViewModel(appl
 
     private val timeStamps = listOf(
         LogTimeStamp(1),
-        LogTimeStamp(3),
         LogTimeStamp(5),
-        LogTimeStamp(Integer.MIN_VALUE,true)
+        LogTimeStamp(10),
+        LogTimeStamp(Integer.MIN_VALUE, true)
     )
 
     val isTriggerSearch: LiveData<Boolean>
@@ -46,7 +46,7 @@ internal class FilterViewModel(application: Application) : AndroidViewModel(appl
         get() = _isFilterApplied
     private val _isFilterApplied = MediatorLiveData<Boolean>()
 
-    val isFilterVisible : LiveData<Boolean>
+    val isFilterVisible: LiveData<Boolean>
         get() = _isFilterVisible
     private val _isFilterVisible = MediatorLiveData<Boolean>()
 
@@ -54,21 +54,23 @@ internal class FilterViewModel(application: Application) : AndroidViewModel(appl
 
         _isTriggerSearch.addSource(_selectedFiltersList) { _isTriggerSearch.postValue(true) }
         _isTriggerSearch.addSource(_searchTextLogger) { _isTriggerSearch.postValue(true) }
-        _isTriggerSearch.addSource(_selectedTimeStamp) {_isTriggerSearch.postValue(true)}
+        _isTriggerSearch.addSource(_selectedTimeStamp) { _isTriggerSearch.postValue(true) }
         _searchTextLogger.postValue(Session.loggerSearchText)
         _selectedFiltersList.postValue(preferences.selectedFilterLogType)
         _selectedTimeStamp.postValue(preferences.selectedFilterTime)
         _isFilterApplied.addSource(_selectedFiltersList) {
-            if (it.isNotEmpty() || getSelectedTimeStamp().timeStamp != 0)
+            if (it.isNotEmpty() || getSelectedTimeStamp().timeStamp != 0) {
                 _isFilterApplied.postValue(true)
-            else
+            } else {
                 _isFilterApplied.postValue(false)
+            }
         }
         _isFilterApplied.addSource(_selectedTimeStamp) {
-            if (it.timeStamp != 0 || getSelectedFilters().isNotEmpty())
+            if (it.timeStamp != 0 || getSelectedFilters().isNotEmpty()) {
                 _isFilterApplied.postValue(true)
-            else
+            } else {
                 _isFilterApplied.postValue(false)
+            }
         }
         _isFilterVisible.postValue(false)
     }
@@ -86,7 +88,7 @@ internal class FilterViewModel(application: Application) : AndroidViewModel(appl
     }
 
     fun getSelectedTimeStamp(): LogTimeStamp {
-        return selectedTimeStamp.value ?: LogTimeStamp(0,false)
+        return selectedTimeStamp.value ?: LogTimeStamp(0, false)
     }
 
     fun updateSearchText(searchText: String) {
@@ -112,6 +114,6 @@ internal class FilterViewModel(application: Application) : AndroidViewModel(appl
     fun clearFilters() {
         preferences.clearFilters()
         _selectedFiltersList.postValue(emptyList())
-        _selectedTimeStamp.postValue(LogTimeStamp(0,false))
+        _selectedTimeStamp.postValue(LogTimeStamp(0, false))
     }
 }
