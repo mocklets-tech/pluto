@@ -125,8 +125,7 @@ internal class LogsViewModel(application: Application) : AndroidViewModel(applic
 }
 
 private fun LogData.isValidSearch(search: String): Boolean {
-    return search.isEmpty()
-            || message.contains(search, true)
-            || stackTrace.fileName.contains(search, true)
+    return search.isEmpty() ||
+        message.contains(search, true) ||
+        stackTrace.fileName.contains(search, true)
 }
-
