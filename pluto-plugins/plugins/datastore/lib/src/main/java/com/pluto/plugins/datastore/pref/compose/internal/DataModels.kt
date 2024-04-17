@@ -3,13 +3,13 @@ package com.pluto.plugins.datastore.pref.compose.internal
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 
-data class PrefUiModel(
+internal data class PrefUiModel(
     val name: String,
     val data: List<PrefElement>,
     val isExpanded: MutableState<Boolean> = mutableStateOf(true)
 )
 
-data class PrefElement(
+internal data class PrefElement(
     val prefName: String,
     val key: String,
     val value: Any

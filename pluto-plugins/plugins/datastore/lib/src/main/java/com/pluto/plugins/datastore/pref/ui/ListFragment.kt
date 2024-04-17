@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.pluto.plugin.share.Shareable
 import com.pluto.plugin.share.lazyContentSharer
-import com.pluto.plugins.datastore.pref.PreferenceHolder
+import com.pluto.plugins.datastore.pref.PlutoDatastoreWatcher
 import com.pluto.plugins.datastore.pref.R
 import com.pluto.plugins.datastore.pref.Session
 import com.pluto.plugins.datastore.pref.compose.internal.BaseViewModel
@@ -21,6 +21,7 @@ import com.pluto.utilities.DebugLog
 import com.pluto.utilities.autoClearInitializer
 import com.pluto.utilities.extensions.hideKeyboard
 import com.pluto.utilities.extensions.linearLayoutManager
+import com.pluto.utilities.extensions.toast
 import com.pluto.utilities.list.BaseAdapter
 import com.pluto.utilities.list.CustomItemDecorator
 import com.pluto.utilities.list.DiffAwareAdapter
@@ -34,6 +35,7 @@ import com.pluto.utilities.views.keyvalue.edit.KeyValuePairEditor
 import com.pluto.utilities.views.keyvalue.edit.lazyKeyValuePairEditor
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 
 internal class ListFragment : Fragment(R.layout.pluto_dts___fragment_list) {
     private val binding by viewBinding(PlutoDtsFragmentListBinding::bind)
@@ -88,18 +90,20 @@ internal class ListFragment : Fragment(R.layout.pluto_dts___fragment_list) {
     }
 
     private fun openFilterView() {
+        toast("selected : ${baseVM.filteredPref.value.size}")
         dataSelector.selectMultiple(
             title = getString(R.string.pluto_dts___datastore_pref_filter),
-            list = viewModel.getPrefFiles(),
-            preSelected = viewModel.getSelectedPrefFiles()
+            list = PlutoDatastoreWatcher.sources.value.toList(),
+            preSelected = baseVM.filteredPref.value.toList()
         ).observe(viewLifecycleOwner) {
-            val listOfSharePrefFiles = arrayListOf<PreferenceHolder>()
-            it.forEach { option ->
-                if (option is PreferenceHolder) {
-                    listOfSharePrefFiles.add(option)
-                }
-            }
-            viewModel.setSelectedPrefFiles(listOfSharePrefFiles)
+            baseVM.filteredPref.update { it }
+//            val listOfSharePrefFiles = arrayListOf<PreferenceHolder>()
+//            it.forEach { option ->
+//                if (option is PreferenceHolder) {
+//                    listOfSharePrefFiles.add(option)
+//                }
+//            }
+//            viewModel.setSelectedPrefFiles(listOfSharePrefFiles)
         }
     }
 
