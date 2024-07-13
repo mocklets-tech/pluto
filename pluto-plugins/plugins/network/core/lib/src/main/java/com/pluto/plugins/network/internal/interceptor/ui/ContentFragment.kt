@@ -56,7 +56,6 @@ internal class ContentFragment : Fragment(R.layout.pluto_network___fragment_cont
                             append("\n")
                         }
                     }
-
                     scrollToText(search.trim())
                 }
             }
@@ -71,20 +70,6 @@ internal class ContentFragment : Fragment(R.layout.pluto_network___fragment_cont
             binding.typeFilter.text = it.typeText
             binding.contentSize.text = it.sizeText
             binding.editSearch.setText("")
-        }
-    }
-
-    private fun exitSearch() {
-        binding.editSearch.text = null
-        binding.searchView.visibility = View.GONE
-        binding.editSearch.clearFocus()
-    }
-
-    private fun handleBackPress() {
-        if (binding.searchView.isVisible) {
-            exitSearch()
-        } else {
-            findNavController().navigateUp()
         }
     }
 
@@ -108,9 +93,23 @@ internal class ContentFragment : Fragment(R.layout.pluto_network___fragment_cont
                     val y = layout.getLineTop(lineNumber)
 
                     binding.horizontalScroll.smoothScrollTo(x / 2, 0)
-                    binding.nestedScrollView.smoothScrollTo(0, y / 2)
+                    binding.contentNestedScrollView.smoothScrollTo(0, y / 2)
                 }
             }
+        }
+    }
+
+    private fun exitSearch() {
+        binding.editSearch.text = null
+        binding.searchView.visibility = View.GONE
+        binding.editSearch.clearFocus()
+    }
+
+    private fun handleBackPress() {
+        if (binding.searchView.isVisible) {
+            exitSearch()
+        } else {
+            findNavController().navigateUp()
         }
     }
 
