@@ -92,8 +92,9 @@ internal class ContentFragment : Fragment(R.layout.pluto_network___fragment_cont
      * helps to auto scroll to target search
      */
     private fun scrollToText(targetText: String) {
-        if (targetText.isEmpty())
+        if (targetText.isEmpty()) {
             return
+        }
 
         val contentText = binding.content.getText().toString().lowercase()
         val index = contentText.indexOf(targetText.lowercase())
