@@ -107,8 +107,8 @@ internal class ContentFragment : Fragment(R.layout.pluto_network___fragment_cont
                     val x = layout.getPrimaryHorizontal(index.plus(targetText.length)).toInt()
                     val y = layout.getLineTop(lineNumber)
 
-                    binding.horizontalScroll.smoothScrollTo(x / 2, 0)
-                    binding.nestedScrollView.smoothScrollTo(0, y / 2)
+                    binding.horizontalScroll.smoothScrollTo(x/2, 0)
+                    binding.nestedScrollView.smoothScrollTo(0, y/2)
                 }
             }
         }
