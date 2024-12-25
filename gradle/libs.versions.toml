@@ -1,12 +1,9 @@
 [versions]
-
 java = "1.8"
-
 minSdk = "21"
 targetSdk = "32"
 compileSdk = "33"
 buildTools = "32.0.0"
-
 agp = "7.4.2"
 androidXCore = "1.6.0"
 androidXLifecycle = "2.4.0"
@@ -23,9 +20,10 @@ navigation = "2.4.1"
 okhttp = "4.9.1"
 retrofit = "2.9.0"
 room = "2.5.1"
+androidGradlePlugin = "8.1.2"
+jitpackMavenPublish = "8.0.0"
 
 [plugins]
-
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
@@ -38,7 +36,6 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-plugin" }
 
 [libraries]
-
 androidx-annotation = { module = "androidx.annotation:annotation", version = "1.4.0" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.4.0" }
 androidx-browser = { module = "androidx.browser:browser", version = "1.4.0" }
@@ -54,7 +51,6 @@ androidx-navigation-ui = { module = "androidx.navigation:navigation-ui", version
 androidx-preference = { module = "androidx.preference:preference-ktx", version = "1.2.0" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version = "1.2.1" }
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version = "1.1.0" }
-
 compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "composeMaterial3" }
 compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
@@ -62,13 +58,9 @@ compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version = "1.0.1" }
-
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version = "1.0.0" }
-
 google-material = { module = "com.google.android.material:material", version = "1.6.1" }
-
 junit = { module = "junit:junit", version = "4.13.2" }
-
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.6.0" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.5.1" }
@@ -76,19 +68,18 @@ ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "k
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-core-jvm = { module = "io.ktor:ktor-client-core-jvm", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
-
 leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version = "2.7" }
-
 moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 moshi-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
-
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttp-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 okio = { module = "com.squareup.okio:okio", version = "2.10.0" }
-
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
 room = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
-
 timber = { module = "com.jakewharton.timber:timber", version = "5.0.1" }
+
+android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePlugin" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+jitpack-maven-publish-plugin = { module = "com.github.dcendents:android-maven-gradle-plugin", version.ref = "jitpackMavenPublish" }
